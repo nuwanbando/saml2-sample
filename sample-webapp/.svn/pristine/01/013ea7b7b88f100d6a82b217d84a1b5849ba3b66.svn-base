@@ -1,0 +1,263 @@
+<!DOCTYPE html>
+<!--
+~ Copyright (c) 2005-2013, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
+~
+~ WSO2 Inc. licenses this file to you under the Apache License,
+~ Version 2.0 (the "License"); you may not use this file except
+~ in compliance with the License.
+~ You may obtain a copy of the License at
+~
+~ http://www.apache.org/licenses/LICENSE-2.0
+~
+~ Unless required by applicable law or agreed to in writing,
+~ software distributed under the License is distributed on an
+~ "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+~ KIND, either express or implied. See the License for the
+~ specific language governing permissions and limitations
+~ under the License.
+-->
+
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>State of Arizona</title>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    <!-- Le styles -->
+    <link href="assets/css/bootstrap.min.css" rel="stylesheet">
+    <link href="css/localstyles.css" rel="stylesheet">
+    <link rel="stylesheet" href="css/redmond/jquery-ui-1.9.2.custom.min.css" />
+    <link type="text/css" href="css/style.css" rel="stylesheet"  media="all" />
+    <!--[if lt IE 8]>
+    <link href="css/localstyles-ie7.css" rel="stylesheet">
+    <![endif]-->
+
+    <!-- Le HTML5 shim, for IE6-8 support of HTML5 elements -->
+    <!--[if lt IE 9]>
+    <script src="assets/js/html5.js"></script>
+    <![endif]-->
+    <script src="assets/js/jquery-1.7.1.min.js"></script>
+    <script src="js/scripts.js"></script>
+
+</head>
+
+<body>
+<%
+    String user = (String) request.getParameter("subject");
+    String error = null;
+    String tokenType = null;
+    String expiresIn = null;
+    String refreshToken = null;
+    String accessToken = null;
+    String apiResponse = null;
+    String[] quote = new String[0];
+
+    if (request.getParameter("Error") != null) {
+        error = request.getParameter("Error");
+    } else {
+        tokenType = (String) request.getParameter("TokenType");
+        expiresIn = (String) request.getParameter("ExpiresIn");
+        refreshToken = (String) request.getParameter("RefreshToken");
+        accessToken = (String) request.getParameter("AccessToken");
+    }
+
+    if (request.getParameter("ApiResponse") != null) {
+        apiResponse = request.getParameter("ApiResponse");
+        quote = apiResponse.split(",");
+    }
+
+    session.setAttribute("user", user);
+%>
+
+<div class="middle">
+    <div class="header">
+        <ul class="header-links">
+            <li class="wso2">
+                <a href="http://wso2.com" target="_blank"></a>
+            </li>
+            <li class="contact">
+                <a href="http://wso2.com/contact/" target="_blank">Contact</a>
+            </li>
+            <li class="support">
+                <a href="http://wso2.com/support/" target="_blank">Support</a>
+            </li>
+        </ul>
+
+    </div>
+</div>
+
+<div class="title">
+    <table class="title_table">
+        <tr>
+            <td class="title_text">Sample Web Application - State of Arizona</td>
+        </tr>
+    </table>
+    <br/>
+    <br/>
+    <h3>You are signed as: <%=user%></h3>
+</div>
+
+<!--<div class="header-strip">&nbsp;</div>
+<div class="header-back">
+    <div class="container">
+        <div class="row">
+            <div class="span4 offset3">
+                <a class="logo"></a>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="header-text">
+    Sample Web Application - State of Arizona
+    <br/>
+    <br/>
+
+    <h2>You are logged in as <%=user%>
+    </h2>
+</div>   -->
+
+<div class="container">
+    <div class="row">
+        <div class="span6 offset3 content-section" style="margin-left:250px">
+
+            <form action="sample-consumer" id="loginForm" class="well form-horizontal">
+                <div id="loginTable1" class="identity-box">
+                    <%
+                        if (error != null) {
+                    %>
+                    <div class="control-group">
+                        <label class="control-label">Error:</label>
+
+                        <div class="controls">
+                            <input class="input-xlarge" type="text" value="<%=error%>"
+                                   size='30' disabled/>
+                        </div>
+                    </div>
+                    <%
+                    } else {
+                    %>
+                    <div class="control-group">
+                        <label class="control-label">Token Type:</label>
+
+                        <div class="controls">
+                            <input class="input-xlarge" type="text" value="<%=tokenType%>"
+                                   size='30'/>
+                        </div>
+                    </div>
+                    <div class="control-group">
+                        <label class="control-label">Expires in:</label>
+
+                        <div class="controls">
+                            <input class="input-xlarge" type="text" value="<%=expiresIn%>"
+                                   size='30'/>
+                        </div>
+                    </div>
+                    <div class="control-group">
+                        <label class="control-label">Access Token:</label>
+
+                        <div class="controls">
+                            <input class="input-xlarge" type="text" value="<%=accessToken%>"
+                                   size='30'/>
+                        </div>
+                    </div>
+                    <div class="control-group">
+                        <label class="control-label">Refresh Token:</label>
+
+                        <div class="controls">
+                            <input class="input-xlarge" type="text" value="<%=refreshToken%>"
+                                   size='30'/>
+                        </div>
+                    </div>
+
+                    <hr size="3">
+                    <div class="control-group">
+                        <label class="control-label">Get Quote:</label>
+                        <input type="hidden" name="subject" value="<%=user%>"/>
+                        <input type="hidden" name="TokenType" value="<%=tokenType%>"/>
+                        <input type="hidden" name="ExpiresIn" value="<%=expiresIn%>"/>
+                        <input type="hidden" name="RefreshToken" value="<%=refreshToken%>"/>
+                        <input type="hidden" name="AccessToken" value="<%=accessToken%>"/>
+
+                        <div class="controls">
+                            <input class="input-medium" type="text" id="quote" name="quote"
+                                   size='30'/> <input type="submit" value="Quote"
+                                                      class="btn btn-primary"
+                                                      style="margin-left: 10px">
+                        </div>
+
+                    </div>
+                    <%
+                        if (apiResponse != null && quote.length >2) {
+                    %>
+
+                    <div class="control-group">
+                        <label class="control-label">Company:</label>
+
+                        <div class="controls">
+                            <input class="input-xlarge" type="text" value="<%=quote[0]%>"
+                                   size='30'/>
+                        </div>
+                    </div>
+                    <div class="control-group">
+                        <label class="control-label">Last Trade:</label>
+
+                        <div class="controls">
+                            <input class="input-xlarge" type="text" value="<%=quote[1]%>"
+                                   size='30'/>
+                        </div>
+                    </div>
+                    <div class="control-group">
+                        <label class="control-label">Volume:</label>
+
+                        <div class="controls">
+                            <input class="input-xlarge" type="text" value="<%=quote[2]%>"
+                                   size='30'/>
+                        </div>
+                    </div>
+
+                    <%
+                        } else if(apiResponse != null && quote.length <2) {
+                    %>
+
+                    <div class="control-group">
+                        <label class="control-label">Error:</label>
+
+                        <div class="controls">
+                            <input class="input-xlarge" type="text" value="<%=quote[0]%>"
+                                   size='30' disabled/>
+                        </div>
+                    </div>
+
+                    <%
+                        }
+                    %>
+
+                    <%
+                        }
+                    %>
+
+                </div>
+
+            </form>
+
+            <form action="sample-consumer">
+                <div style="margin-top:20px;margin-bottom:20px;text-align:center">
+                    <input type="submit" value="Logout" class="btn btn-primary">
+                    <input type="hidden" name="logout" value="<%=user%>"/>
+                </div>
+            </form>
+
+
+        </div>
+    </div>
+</div>
+</div>
+<!-- /container -->
+
+</body>
+</html>
+
